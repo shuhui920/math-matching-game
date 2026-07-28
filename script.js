@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     for (var j = 0; j < shuffledAnswers.length; j++) {
       answersContainer.appendChild(
-        createCard(shuffledAnswers[j].answer, "answer", shuffledAnswers[j].id)
+        createCard(shuffledAnswers[j].answer, "answer", shuffledAnswers[j].id, shuffledAnswers[j].answer)
       );
     }
   }

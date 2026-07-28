@@ -348,15 +348,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (saveBtn) saveBtn.addEventListener("click", saveScore);
   if (restartBtn) restartBtn.addEventListener("click", restartGame);
 
-  // 防止文字選取
-  if (expressionsContainer) {
-    expressionsContainer.addEventListener("selectstart", function (e) { e.preventDefault(); });
-    expressionsContainer.addEventListener("mousedown", function () { return false; });
-  }
-  if (answersContainer) {
-    answersContainer.addEventListener("selectstart", function (e) { e.preventDefault(); });
-    answersContainer.addEventListener("mousedown", function () { return false; });
-  }
+  // CSS 已有 user-select: none，此處不需額外處理
 
   // 確保開始畫面顯示
   showScreen(startScreen);

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>數學加減法配對遊戲</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 開始畫面 -->
+    <section id="start-screen" class="screen active">
+      <div class="card">
+        <h1>🧮 數學加減法配對</h1>
+        <p class="subtitle">把算式和答案配對起來！</p>
+        <form id="start-form">
+          <div class="form-group">
+            <label for="class-input">班級</label>
+            <input type="text" id="class-input" placeholder="例如：三年甲班" required>
+          </div>
+          <div class="form-group">
+            <label for="seat-input">座號</label>
+            <input type="number" id="seat-input" placeholder="例如：5" min="1" required>
+          </div>
+          <div class="form-group">
+            <label for="question-count">題數</label>
+            <select id="question-count">
+              <option value="6">6 題</option>
+              <option value="10" selected>10 題</option>
+              <option value="15">15 題</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">開始遊戲</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 遊戲畫面 -->
+    <section id="game-screen" class="screen">
+      <header class="game-header">
+        <div class="player-info">
+          <span id="display-class">班級</span>
+          <span id="display-seat">座號</span>
+        </div>
+        <div class="game-stats">
+          <div class="stat">
+            <span class="stat-label">時間</span>
+            <span id="timer" class="stat-value">00:00</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">分數</span>
+            <span id="score" class="stat-value">0</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">進度</span>
+            <span id="progress" class="stat-value">0/0</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="game-board">
+        <div class="column">
+          <h2>算式</h2>
+          <div id="expressions" class="cards"></div>
+        </div>
+        <div class="column">
+          <h2>答案</h2>
+          <div id="answers" class="cards"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 結束畫面 -->
+    <section id="end-screen" class="screen">
+      <div class="card">
+        <h1>🎉 遊戲結束</h1>
+        <div class="result-grid">
+          <div class="result-item">
+            <span class="result-label">班級</span>
+            <span id="end-class" class="result-value">-</span>
+          </div>
+          <div class="result-item">
+            <span class="result-label">座號</span>
+            <span id="end-seat" class="result-value">-</span>
+          </div>
+          <div class="result-item">
+            <span class="result-label">總題數</span>
+            <span id="end-total" class="result-value">-</span>
+          </div>
+          <div class="result-item">
+            <span class="result-label">正確題數</span>
+            <span id="end-correct" class="result-value">-</span>
+          </div>
+          <div class="result-item">
+            <span class="result-label">錯誤次數</span>
+            <span id="end-wrong" class="result-value">-</span>
+          </div>
+          <div class="result-item">
+            <span class="result-label">遊戲時間</span>
+            <span id="end-time" class="result-value">-</span>
+          </div>
+          <div class="result-item highlight">
+            <span class="result-label">總分</span>
+            <span id="end-score" class="result-value">-</span>
+          </div>
+        </div>
+        <div id="save-status" class="save-status"></div>
+        <div class="button-group">
+          <button id="save-btn" class="btn btn-primary">儲存成績</button>
+          <button id="restart-btn" class="btn btn-secondary">再玩一次</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -262,10 +262,12 @@
   var SUPABASE_URL = "https://deebjpgtujatpefucajc.supabase.co";
   var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlZWJqcGd0dWphdHBlZnVjYWpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyMTk3NjgsImV4cCI6MjEwMDc5NTc2OH0.u9Q8Vv4z0XsPVN8zJVtdbo3_2Sv8lv9JD5SXbuWo5a4";
   var _gk = ["gsk_","NRUu","YI8n","ypeE","zqHG","G0Gx","WGdy","b3FY","C5Eh","tNkd","0HU5","OEGa","w0uh","hBpi"];
-  var GROQ_KEY = localStorage.getItem("groq_key") || _gk.join("");
-  console.log("Groq key loaded:", GROQ_KEY ? "yes (length "+GROQ_KEY.length+")" : "no");
+  var _builtKey = _gk.join("");
+  var GROQ_KEY = localStorage.getItem("groq_key");
+  if (!GROQ_KEY || GROQ_KEY.length < 10) { GROQ_KEY = _builtKey; }
+  console.log("Groq key status:", GROQ_KEY ? "SET (length "+GROQ_KEY.length+")" : "NOT SET");
 
-  var db, groqOk = !!GROQ_KEY;
+  var db, groqOk = !!(GROQ_KEY && GROQ_KEY.length > 10);
   console.log("groqOk:", groqOk);
   try { 
     db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); 

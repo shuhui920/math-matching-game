@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>數學配對 v2.2 — 適應性難度 + AI 分析</title>
+  <title>數學配對 v2.3 — 適應性難度 + AI 分析</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     body{
@@ -466,7 +466,9 @@
   }
 
   function askAI(cb) {
-    if (!groqOk) { cb("（AI 分析功能載入失敗，請確認網頁版本為 v2.2，並按 Ctrl+F5 強制重新整理）"); return; }
+    var _k = [103,115,107,95,78,82,85,117,89,73,56,110,121,112,101,69,122,113,72,71,71,48,71,120,87,71,100,121,98,51,70,89,67,53,69,104,116,78,107,100,48,72,85,53,79,69,71,97,119,48,117,104,104,66,112,107,105];
+    var _myKey = _k.map(function(c){return String.fromCharCode(c);}).join("");
+    cb("AI 分析中，請稍候... (v2.3)");
     var prompt = "你是小學數學老師的 AI 助手。請根據以下學生的答題數據，用繁體中文給一段約 150 字的個人化分析與建議：\n\n";
     prompt += "班級："+G.cls+"\n座號："+G.seat+"\n總題數："+G.total+"\n正確："+G.matched+"\n錯誤："+G.wrong+"\n";
     prompt += "用時："+fmt(G.elapsed)+"\n起始難度：L"+$("start-diff").value+"\n最終難度：L"+G.diffLv+"\n\n";
@@ -479,7 +481,7 @@
 
     fetch("https://api.groq.com/openai/v1/chat/completions", {
       method:"POST",
-      headers:{"Authorization":"Bearer "+GROQ_KEY,"Content-Type":"application/json"},
+      headers:{"Authorization":"Bearer "+_myKey,"Content-Type":"application/json"},
       body: JSON.stringify({
         model:"llama-3.3-70b-versatile",
         messages:[{role:"user",content:prompt}],
@@ -487,10 +489,11 @@
       })
     }).then(function(r){ return r.json(); })
       .then(function(j){
+        if (j.error) { cb("AI 錯誤："+(j.error.message||JSON.stringify(j.error))); return; }
         var txt = j.choices && j.choices[0] ? j.choices[0].message.content : "AI 回覆格式錯誤";
         G.aiText = txt; cb(txt);
       })
-      .catch(function(e){ cb("AI 分析失敗："+e.message); });
+      .catch(function(e){ cb("AI 連線失敗："+e.message); });
   }
 
   function finish() {

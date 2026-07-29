@@ -9,32 +9,32 @@
     body{
       font-family:"Microsoft JhengHei","PingFang TC",sans-serif;
       background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-      min-height:100vh;padding:30px 20px;margin:0
+      min-height:100vh;padding:24px;margin:0
     }
-    .container{
-      max-width:1100px;margin:0 auto
+    .wrap{
+      max-width:960px;margin:0 auto
     }
     .screen{display:none}
     .screen.active{display:block}
 
-    .card{
-      background:white;border-radius:20px;padding:48px 40px;
+    /* start */
+    .start-card{
+      background:white;border-radius:20px;padding:40px;
       box-shadow:0 20px 60px rgba(0,0,0,.2);text-align:center;
-      margin:0 auto;max-width:500px
+      margin:0 auto;max-width:480px
     }
-    h1{font-size:2rem;color:#333;margin-bottom:6px}
-    .subtitle{color:#666;margin-bottom:28px;font-size:1.05rem}
+    h1{font-size:1.9rem;color:#333;margin-bottom:6px}
+    .subtitle{color:#666;margin-bottom:26px;font-size:1rem}
     form{text-align:left}
-    .form-group{margin-bottom:18px}
-    label{display:block;margin-bottom:6px;color:#444;font-weight:bold;font-size:.95rem}
+    .form-group{margin-bottom:16px}
+    label{display:block;margin-bottom:5px;color:#444;font-weight:bold;font-size:.92rem}
     input,select{
-      width:100%;padding:12px 14px;border:2px solid #e0e0e0;border-radius:10px;font-size:1rem;
-      transition:border-color .3s
+      width:100%;padding:11px 13px;border:2px solid #e0e0e0;border-radius:10px;font-size:1rem
     }
     input:focus,select:focus{outline:none;border-color:#667eea}
     .btn{
       display:inline-block;padding:14px 32px;border:none;border-radius:10px;
-      font-size:1.1rem;font-weight:bold;cursor:pointer;transition:transform .2s,box-shadow .2s
+      font-size:1.05rem;font-weight:bold;cursor:pointer;transition:transform .2s
     }
     .btn:hover{transform:translateY(-2px)}
     .btn-primary{
@@ -42,103 +42,113 @@
       box-shadow:0 4px 15px rgba(102,126,234,.4)
     }
     .btn-secondary{background:#f0f0f0;color:#444;margin-left:10px}
-    .btn-full{width:100%;margin-top:6px}
     .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+    .btn-full{width:100%;margin-top:6px}
 
+    /* game */
     .game-header{
-      background:white;border-radius:16px;padding:16px 24px;margin-bottom:16px;
+      background:white;border-radius:14px;padding:14px 22px;margin-bottom:14px;
       display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
       box-shadow:0 4px 20px rgba(0,0,0,.1)
     }
-    .player-info{display:flex;gap:14px;font-weight:bold;color:#333;font-size:1.05rem}
-    .game-stats{display:flex;gap:22px}
+    .player-info{display:flex;gap:14px;font-weight:bold;color:#333;font-size:1rem}
+    .game-stats{display:flex;gap:20px}
     .stat{text-align:center}
-    .stat-label{display:block;font-size:.82rem;color:#888;margin-bottom:2px}
-    .stat-value{display:block;font-size:1.3rem;font-weight:bold;color:#667eea}
+    .stat-label{display:block;font-size:.78rem;color:#888;margin-bottom:1px}
+    .stat-value{display:block;font-size:1.2rem;font-weight:bold;color:#667eea}
 
     .diff-bar-wrap{
-      background:white;border-radius:14px;padding:12px 28px;margin-bottom:16px;
-      box-shadow:0 2px 12px rgba(0,0,0,.08);display:flex;align-items:center;gap:18px
+      background:white;border-radius:12px;padding:12px 24px;margin-bottom:14px;
+      box-shadow:0 2px 12px rgba(0,0,0,.08);display:flex;align-items:center;gap:16px
     }
-    .diff-label{font-size:.9rem;font-weight:bold;color:#555;white-space:nowrap;min-width:36px}
-    .diff-ticks{flex:1;display:flex;position:relative;justify-content:space-between;height:36px;align-items:center}
+    .diff-label{font-size:.88rem;font-weight:bold;color:#555;white-space:nowrap}
+    .diff-ticks{flex:1;display:flex;position:relative;justify-content:space-between;align-items:center;height:34px}
     .diff-ticks::before{
-      content:"";position:absolute;top:50%;left:0;right:0;height:6px;background:#e0e0e0;
+      content:"";position:absolute;top:50%;left:0;right:0;height:5px;background:#e0e0e0;
       border-radius:3px;transform:translateY(-50%)
     }
     .diff-tick{
-      position:relative;z-index:1;width:38px;height:38px;border-radius:50%;
+      position:relative;z-index:1;width:36px;height:36px;border-radius:50%;
       display:flex;align-items:center;justify-content:center;
-      font-size:.78rem;font-weight:bold;background:white;border:3px solid #e0e0e0;color:#aaa;
+      font-size:.75rem;font-weight:bold;background:white;border:3px solid #e0e0e0;color:#aaa;
       transition:all .3s
     }
-    .diff-tick.active{background:#667eea;border-color:#667eea;color:white;box-shadow:0 0 14px rgba(102,126,234,.5)}
+    .diff-tick.active{background:#667eea;border-color:#667eea;color:white;box-shadow:0 0 12px rgba(102,126,234,.5)}
     .diff-tick.passed{background:#cfe0ff;border-color:#667eea;color:#667eea}
 
-    .game-board{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-    .column{
-      background:white;border-radius:18px;padding:24px;
-      box-shadow:0 4px 20px rgba(0,0,0,.1)
+    .game-board{
+      display:flex;justify-content:center;gap:20px
     }
-    .column h2{text-align:center;color:#667eea;margin-bottom:16px;font-size:1.25rem}
-    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
+    .game-col{
+      background:white;border-radius:18px;padding:22px;box-shadow:0 4px 20px rgba(0,0,0,.1);
+      flex:1;min-width:0;max-width:420px
+    }
+    .game-col h2{text-align:center;color:#667eea;margin-bottom:14px;font-size:1.15rem}
+    .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
     .card-item{
-      background:linear-gradient(135deg,#f5f7fa 0%,#e6eaf0 100%);
-      border:3px solid transparent;border-radius:14px;padding:20px 8px;
-      text-align:center;cursor:pointer;font-size:1.15rem;font-weight:bold;
-      color:#333;min-height:62px;display:flex;align-items:center;
+      background:linear-gradient(135deg,#f5f7fa 0%,#e8ecf2 100%);
+      border:3px solid transparent;border-radius:12px;padding:18px 8px;
+      text-align:center;cursor:pointer;font-size:1.1rem;font-weight:bold;
+      color:#333;min-height:58px;display:flex;align-items:center;
       justify-content:center;user-select:none;transition:all .25s
     }
-    .card-item:hover{transform:translateY(-3px);box-shadow:0 6px 15px rgba(0,0,0,.15);border-color:#667eea}
+    .card-item:hover{transform:translateY(-2px);box-shadow:0 5px 12px rgba(0,0,0,.12);border-color:#667eea}
     .card-item.selected{
       background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;
-      border-color:#667eea;transform:scale(1.06);box-shadow:0 8px 20px rgba(102,126,234,.4)
+      border-color:#667eea;transform:scale(1.04);box-shadow:0 6px 16px rgba(102,126,234,.4)
     }
     .card-item.matched{visibility:hidden;pointer-events:none}
     .card-item.wrong{animation:shake .4s;background:#ffe6e6;border-color:#ff6b6b}
     @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 
-    .result-grid{
-      display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:28px 0
+    /* end */
+    .end-card{
+      background:white;border-radius:20px;padding:36px;
+      box-shadow:0 20px 60px rgba(0,0,0,.2);text-align:center;
+      margin:0 auto;max-width:560px
     }
-    .result-item{background:#f8f9fa;border-radius:12px;padding:16px;text-align:center}
+    .result-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0
+    }
+    .result-item{background:#f8f9fa;border-radius:12px;padding:14px;text-align:center}
     .result-item.highlight{
       background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white
     }
-    .result-label{display:block;font-size:.85rem;margin-bottom:4px;opacity:.92}
-    .result-value{display:block;font-size:1.45rem;font-weight:bold}
-    .button-group{margin-top:26px}
-    .save-status{margin:14px 0;min-height:22px;font-weight:bold;text-align:center}
+    .result-label{display:block;font-size:.82rem;margin-bottom:3px;opacity:.92}
+    .result-value{display:block;font-size:1.35rem;font-weight:bold}
+    .button-group{margin-top:22px}
+    .save-status{margin:12px 0;min-height:20px;font-weight:bold;text-align:center}
     .save-status.success{color:#28a745}.save-status.error{color:#dc3545}.save-status.loading{color:#667eea}
 
-    .ai-section{margin:24px auto 0;text-align:left;max-width:520px}
-    .ai-section h3{color:#667eea;margin-bottom:10px;font-size:1.15rem;text-align:center}
+    .ai-section{margin:20px auto 0;text-align:left;max-width:480px}
+    .ai-section h3{color:#667eea;margin-bottom:8px;font-size:1.1rem;text-align:center}
     .ai-box{
-      background:#f8f9ff;border:2px solid #d0d5f0;border-radius:12px;padding:20px;
-      font-size:.95rem;line-height:1.75;color:#333;white-space:pre-wrap;min-height:72px
+      background:#f8f9ff;border:2px solid #d0d5f0;border-radius:12px;padding:16px;
+      font-size:.92rem;line-height:1.7;color:#333;white-space:pre-wrap;min-height:60px
     }
     .ai-box.loading{color:#999;font-style:italic}
-    .diff-result{display:inline-block;padding:6px 18px;border-radius:20px;font-weight:bold;font-size:1rem;margin-top:8px}
+    .diff-result{display:inline-block;padding:5px 16px;border-radius:20px;font-weight:bold;font-size:.95rem;margin-top:6px}
     .diff-result.l1{background:#e8f5e9;color:#2e7d32}
     .diff-result.l2{background:#e3f2fd;color:#1565c0}
     .diff-result.l3{background:#fff3e0;color:#ef6c00}
     .diff-result.l4{background:#fce4ec;color:#c62828}
 
-    @media(max-width:800px){
-      .game-board{grid-template-columns:1fr}
+    @media(max-width:700px){
+      .game-board{flex-direction:column;align-items:center}
+      .game-col{width:100%;max-width:340px}
+      .cards{grid-template-columns:repeat(2,1fr)}
       .result-grid{grid-template-columns:repeat(2,1fr)}
-      .cards{grid-template-columns:repeat(auto-fill,minmax(95px,1fr))}
-      .card-item{font-size:1rem;padding:14px 5px;min-height:50px}
-      .card{padding:30px 22px}h1{font-size:1.4rem}
+      .start-card,.end-card{padding:28px 20px}
+      h1{font-size:1.35rem}
       .game-header{flex-direction:column;text-align:center}
     }
   </style>
 </head>
 <body>
-<div class="container">
+<div class="wrap">
 
 <section id="start-screen" class="screen active">
-  <div class="card">
+  <div class="start-card">
     <h1>數學配對 v2</h1>
     <p class="subtitle">適應性難度 + AI 智慧分析</p>
     <form id="start-form">
@@ -171,7 +181,7 @@
           </select>
         </div>
       </div>
-      <details style="margin:0 0 14px;text-align:left;border:1px solid #e0e0e0;border-radius:8px;padding:10px 14px;background:#fafafa">
+      <details style="margin:0 0 12px;text-align:left;border:1px solid #e0e0e0;border-radius:8px;padding:10px 14px;background:#fafafa">
         <summary style="cursor:pointer;color:#667eea;font-size:.9rem">AI 設定（老師專用）</summary>
         <div style="margin-top:8px">
           <label for="groq-input" style="font-size:.85rem">Groq API Key</label>
@@ -209,13 +219,13 @@
   </div>
 
   <div class="game-board">
-    <div class="column"><h2>算式</h2><div id="expressions" class="cards"></div></div>
-    <div class="column"><h2>答案</h2><div id="answers" class="cards"></div></div>
+    <div class="game-col"><h2>算式</h2><div id="expressions" class="cards"></div></div>
+    <div class="game-col"><h2>答案</h2><div id="answers" class="cards"></div></div>
   </div>
 </section>
 
 <section id="end-screen" class="screen">
-  <div class="card" style="max-width:620px">
+  <div class="end-card">
     <h1>遊戲結束</h1>
     <div class="result-grid">
       <div class="result-item"><span class="result-label">班級</span><span id="end-class" class="result-value">-</span></div>
@@ -231,7 +241,7 @@
     <div class="ai-section">
       <h3>AI 個人化分析</h3>
       <div id="ai-box" class="ai-box"></div>
-      <div id="diff-suggest" style="text-align:center;margin-top:8px"></div>
+      <div id="diff-suggest" style="text-align:center;margin-top:6px"></div>
     </div>
 
     <div id="save-status" class="save-status"></div>

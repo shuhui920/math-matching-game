@@ -261,7 +261,13 @@
   var GROQ_KEY = localStorage.getItem("groq_key") || "";
 
   var db, groqOk = !!GROQ_KEY;
-  try { db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) { db = null; }
+  try { 
+    db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); 
+    console.log("Supabase client created");
+  } catch(e) { 
+    db = null; 
+    console.error("Supabase init failed:", e);
+  }
 
   function $(id) { return document.getElementById(id); }
   var startScreen = $("start-screen"), gameScreen = $("game-screen"), endScreen = $("end-screen");
@@ -521,7 +527,9 @@
       saveStatus.className="save-status success";
       saveBtn.textContent = "已儲存"; saveBtn.disabled = true;
     }).catch(function(e){
-      saveStatus.textContent = "儲存失敗，再試一次";
+      var msg = e && e.message ? e.message : (e ? JSON.stringify(e) : "未知錯誤");
+      console.error("Supabase save error:", e);
+      saveStatus.textContent = "儲存失敗：" + msg;
       saveStatus.className="save-status error";
       saveBtn.disabled = false; saveBtn.textContent = "重新儲存";
     });

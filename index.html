@@ -510,7 +510,7 @@
     var suggest = DIFF[G.diffLv-1].name + " — 下次建議從 L"+G.diffLv+" 開始";
     diffSuggest.innerHTML = '<span class="diff-result l'+G.diffLv+'">'+suggest+'</span>';
 
-    aiBox.textContent = "AI 分析中，請稍候...";
+    aiBox.textContent = "AI 分析中，請稍候... (key="+groqOk+")";
     aiBox.className = "ai-box loading";
     askAI(function(txt){ aiBox.textContent = txt; aiBox.className = "ai-box"; });
   }

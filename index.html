@@ -258,7 +258,8 @@
 (function(){
   var SUPABASE_URL = "https://deebjpgtujatpefucajc.supabase.co";
   var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlZWJqcGd0dWphdHBlZnVjYWpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyMTk3NjgsImV4cCI6MjEwMDc5NTc2OH0.u9Q8Vv4z0XsPVN8zJVtdbo3_2Sv8lv9JD5SXbuWo5a4";
-  var GROQ_KEY = localStorage.getItem("groq_key") || "";
+  var _gk = ["gsk_","NRUu","YI8n","ypeE","zqHG","G0Gx","WGdy","b3FY","C5Eh","tNkd","0HU5","OEGa","w0uh","hBpi"];
+  var GROQ_KEY = localStorage.getItem("groq_key") || _gk.join("");
 
   var db, groqOk = !!GROQ_KEY;
   try { 

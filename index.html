@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>數學配對 v2 — 適應性難度 + AI 分析</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
@@ -260,8 +263,10 @@
   var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlZWJqcGd0dWphdHBlZnVjYWpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyMTk3NjgsImV4cCI6MjEwMDc5NTc2OH0.u9Q8Vv4z0XsPVN8zJVtdbo3_2Sv8lv9JD5SXbuWo5a4";
   var _gk = ["gsk_","NRUu","YI8n","ypeE","zqHG","G0Gx","WGdy","b3FY","C5Eh","tNkd","0HU5","OEGa","w0uh","hBpi"];
   var GROQ_KEY = localStorage.getItem("groq_key") || _gk.join("");
+  console.log("Groq key loaded:", GROQ_KEY ? "yes (length "+GROQ_KEY.length+")" : "no");
 
   var db, groqOk = !!GROQ_KEY;
+  console.log("groqOk:", groqOk);
   try { 
     db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); 
     console.log("Supabase client created");
@@ -518,7 +523,7 @@
       "班級": G.cls, "座號": G.seat, "分數": G.score,
       "遊戲秒數": G.elapsed, "總題數": G.total, "正確題數": G.matched,
       "答題軌跡": JSON.stringify(G.trail),
-      "AI分析": G.aiText,
+      "ai分析": G.aiText,
       "難度歷程": JSON.stringify({start: parseInt($("start-diff").value), end: G.diffLv, log: G.diffLog})
     };
     db.from("數學遊戲紀錄").insert(record).then(function(r){

@@ -148,12 +148,18 @@
   </style>
 </head>
 <body>
+<script>
+// 強制清除快取：如果沒有 cachebuster 參數，重新載入
+if (window.location.search.indexOf("cb=") === -1) {
+  window.location.href = window.location.href.split("?")[0] + "?cb=2.3-" + Date.now();
+}
+</script>
 <div class="wrap">
 
 <section id="start-screen" class="screen active">
   <div class="start-card">
-    <h1>數學配對 v2.2</h1>
-    <p class="subtitle">適應性難度 + AI 智慧分析 <span style="font-size:11px;color:#999;margin-left:8px">v2.2</span></p>
+    <h1>數學配對 v2.3</h1>
+    <p class="subtitle">適應性難度 + AI 智慧分析 <span style="font-size:11px;color:#999;margin-left:8px">v2.3</span></p>
     <form id="start-form">
       <div style="display:flex;gap:12px">
         <div class="form-group" style="flex:1">

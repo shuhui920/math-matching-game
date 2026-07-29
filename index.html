@@ -3,353 +3,569 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>數學加減法配對遊戲</title>
+  <title>數學配對 v2 — 適應性難度 + AI 分析</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px;
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:"Microsoft JhengHei",sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px
     }
-    .container { width: 100%; max-width: 900px; }
-    .screen { display: none; }
-    .screen.active { display: block; }
-    .card {
-      background: white; border-radius: 20px; padding: 40px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.2); text-align: center;
+    .container{width:100%;max-width:950px}
+    .screen{display:none}.screen.active{display:block}
+    .card{
+      background:white;border-radius:20px;padding:40px;box-shadow:0 20px 60px rgba(0,0,0,.2);text-align:center
     }
-    h1 { font-size: 2rem; color: #333; margin-bottom: 10px; }
-    .subtitle { color: #666; margin-bottom: 30px; font-size: 1.1rem; }
-    form { max-width: 400px; margin: 0 auto; text-align: left; }
-    .form-group { margin-bottom: 20px; }
-    label { display: block; margin-bottom: 8px; color: #444; font-weight: bold; font-size: 1rem; }
-    input, select {
-      width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0;
-      border-radius: 10px; font-size: 1rem; transition: border-color 0.3s;
+    h1{font-size:2rem;color:#333;margin-bottom:8px}
+    .subtitle{color:#666;margin-bottom:28px;font-size:1.05rem}
+    form{max-width:420px;margin:0 auto;text-align:left}
+    .form-group{margin-bottom:18px}
+    label{display:block;margin-bottom:6px;color:#444;font-weight:bold;font-size:.95rem}
+    input,select{
+      width:100%;padding:12px 14px;border:2px solid #e0e0e0;border-radius:10px;font-size:1rem;transition:border-color .3s
     }
-    input:focus, select:focus { outline: none; border-color: #667eea; }
-    .btn {
-      display: inline-block; padding: 14px 32px; border: none;
-      border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
+    input:focus,select:focus{outline:none;border-color:#667eea}
+    .btn{
+      display:inline-block;padding:14px 32px;border:none;border-radius:10px;
+      font-size:1.1rem;font-weight:bold;cursor:pointer;transition:transform .2s,box-shadow .2s
     }
-    .btn:hover { transform: translateY(-2px); }
-    .btn-primary { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); color: white; box-shadow: 0 4px 15px rgba(102,126,234,0.4); }
-    .btn-secondary { background: #f0f0f0; color: #444; margin-left: 10px; }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-    .game-header {
-      background: white; border-radius: 15px; padding: 15px 25px; margin-bottom: 20px;
-      display: flex; justify-content: space-between; align-items: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 10px;
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;box-shadow:0 4px 15px rgba(102,126,234,.4)}
+    .btn-secondary{background:#f0f0f0;color:#444;margin-left:10px}
+    .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+    /* header */
+    .game-header{
+      background:white;border-radius:16px;padding:16px 24px;margin-bottom:16px;
+      display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+      box-shadow:0 4px 20px rgba(0,0,0,.1)
     }
-    .player-info { display: flex; gap: 15px; font-weight: bold; color: #333; }
-    .game-stats { display: flex; gap: 25px; }
-    .stat { text-align: center; }
-    .stat-label { display: block; font-size: 0.85rem; color: #888; margin-bottom: 3px; }
-    .stat-value { display: block; font-size: 1.3rem; font-weight: bold; color: #667eea; }
-    .game-board { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .column { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-    .column h2 { text-align: center; color: #667eea; margin-bottom: 15px; font-size: 1.3rem; }
-    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
-    .card-item {
-      background: linear-gradient(135deg,#f5f7fa 0%,#e4e8f0 100%);
-      border: 3px solid transparent; border-radius: 12px; padding: 16px 8px;
-      text-align: center; cursor: pointer; font-size: 1.15rem; font-weight: bold;
-      color: #333; min-height: 55px; display: flex; align-items: center;
-      justify-content: center; user-select: none; transition: all 0.25s;
+    .player-info{display:flex;gap:14px;font-weight:bold;color:#333}
+    .game-stats{display:flex;gap:22px}
+    .stat{text-align:center}
+    .stat-label{display:block;font-size:.82rem;color:#888;margin-bottom:2px}
+    .stat-value{display:block;font-size:1.25rem;font-weight:bold;color:#667eea}
+
+    /* difficulty bar */
+    .diff-bar-wrap{
+      background:white;border-radius:12px;padding:10px 20px;margin-bottom:14px;
+      box-shadow:0 2px 12px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px
     }
-    .card-item:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); border-color: #667eea; }
-    .card-item.selected { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); color: white; border-color: #667eea; transform: scale(1.08); box-shadow: 0 8px 20px rgba(102,126,234,0.4); }
-    .card-item.matched { visibility: hidden; pointer-events: none; }
-    .card-item.wrong { animation: shake 0.4s; background: #ffe6e6; border-color: #ff6b6b; }
-    @keyframes shake {
-      0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}
+    .diff-label{font-size:.85rem;font-weight:bold;color:#555;white-space:nowrap}
+    .diff-ticks{display:flex;flex:1;position:relative;justify-content:space-between}
+    .diff-ticks::before{
+      content:"";position:absolute;top:50%;left:0;right:0;height:4px;background:#e0e0e0;
+      border-radius:2px;transform:translateY(-50%)
     }
-    .result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 15px; margin: 30px 0; }
-    .result-item { background: #f8f9fa; border-radius: 12px; padding: 15px; }
-    .result-item.highlight { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); color: white; }
-    .result-label { display: block; font-size: 0.9rem; margin-bottom: 5px; opacity: 0.9; }
-    .result-value { display: block; font-size: 1.5rem; font-weight: bold; }
-    .button-group { margin-top: 25px; }
-    .save-status { margin: 15px 0; min-height: 24px; font-weight: bold; }
-    .save-status.success { color: #28a745; }
-    .save-status.error { color: #dc3545; }
-    .save-status.loading { color: #667eea; }
-    @media (max-width: 768px) {
-      .game-board { grid-template-columns: 1fr; }
-      .game-header { flex-direction: column; text-align: center; }
-      .cards { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
-      .card-item { font-size: 1rem; padding: 12px 6px; }
-      .card { padding: 25px; }
-      h1 { font-size: 1.5rem; }
+    .diff-tick{
+      position:relative;z-index:1;width:32px;height:32px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:.75rem;font-weight:bold;background:white;border:3px solid #e0e0e0;color:#aaa;
+      transition:all .3s
+    }
+    .diff-tick.active{background:#667eea;border-color:#667eea;color:white;box-shadow:0 0 12px rgba(102,126,234,.5)}
+    .diff-tick.passed{background:#c3d9ff;border-color:#667eea;color:#667eea}
+
+    /* board */
+    .game-board{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .column{background:white;border-radius:18px;padding:20px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+    .column h2{text-align:center;color:#667eea;margin-bottom:14px;font-size:1.2rem}
+    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:10px}
+    .card-item{
+      background:linear-gradient(135deg,#f5f7fa 0%,#e6eaf0 100%);
+      border:3px solid transparent;border-radius:12px;padding:15px 6px;
+      text-align:center;cursor:pointer;font-size:1.1rem;font-weight:bold;
+      color:#333;min-height:52px;display:flex;align-items:center;
+      justify-content:center;user-select:none;transition:all .25s
+    }
+    .card-item:hover{transform:translateY(-3px);box-shadow:0 6px 15px rgba(0,0,0,.15);border-color:#667eea}
+    .card-item.selected{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border-color:#667eea;transform:scale(1.06);box-shadow:0 8px 20px rgba(102,126,234,.4)}
+    .card-item.matched{visibility:hidden;pointer-events:none}
+    .card-item.wrong{animation:shake .4s;background:#ffe6e6;border-color:#ff6b6b}
+    @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+
+    /* end */
+    .result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;margin:26px 0}
+    .result-item{background:#f8f9fa;border-radius:12px;padding:15px}
+    .result-item.highlight{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white}
+    .result-label{display:block;font-size:.85rem;margin-bottom:4px;opacity:.9}
+    .result-value{display:block;font-size:1.4rem;font-weight:bold}
+    .button-group{margin-top:24px}
+    .save-status{margin:14px 0;min-height:22px;font-weight:bold}
+    .save-status.success{color:#28a745}.save-status.error{color:#dc3545}.save-status.loading{color:#667eea}
+
+    /* ai */
+    .ai-section{margin-top:24px;text-align:left;max-width:600px;margin-left:auto;margin-right:auto}
+    .ai-section h3{color:#667eea;margin-bottom:10px;font-size:1.1rem}
+    .ai-box{
+      background:#f8f9ff;border:2px solid #d0d5f0;border-radius:12px;padding:18px;
+      font-size:.95rem;line-height:1.7;color:#333;white-space:pre-wrap;min-height:64px
+    }
+    .ai-box.loading{color:#999;font-style:italic}
+
+    .diff-result{display:inline-block;padding:6px 16px;border-radius:20px;font-weight:bold;font-size:1rem;margin-top:8px}
+    .diff-result.l1{background:#e8f5e9;color:#2e7d32}
+    .diff-result.l2{background:#e3f2fd;color:#1565c0}
+    .diff-result.l3{background:#fff3e0;color:#ef6c00}
+    .diff-result.l4{background:#fce4ec;color:#c62828}
+
+    @media(max-width:768px){
+      .game-board{grid-template-columns:1fr}
+      .game-header{flex-direction:column;text-align:center}
+      .cards{grid-template-columns:repeat(auto-fill,minmax(85px,1fr))}
+      .card-item{font-size:.95rem;padding:12px 5px}
+      .card{padding:24px}h1{font-size:1.4rem}
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <section id="start-screen" class="screen active">
-      <div class="card">
-        <h1>數學加減法配對</h1>
-        <p class="subtitle">把算式和答案配對起來！</p>
-        <form id="start-form">
-          <div class="form-group">
-            <label for="class-input">班級</label>
-            <input type="text" id="class-input" placeholder="例如：三年甲班" required>
-          </div>
-          <div class="form-group">
-            <label for="seat-input">座號</label>
-            <input type="number" id="seat-input" placeholder="例如：5" min="1" required>
-          </div>
-          <div class="form-group">
-            <label for="question-count">題數</label>
-            <select id="question-count">
-              <option value="6">6 題</option>
-              <option value="10" selected>10 題</option>
-              <option value="15">15 題</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn-primary">開始遊戲</button>
-        </form>
-      </div>
-    </section>
+<div class="container">
 
-    <section id="game-screen" class="screen">
-      <header class="game-header">
-        <div class="player-info">
-          <span id="display-class">-</span>
-          <span id="display-seat">-</span>
-        </div>
-        <div class="game-stats">
-          <div class="stat"><span class="stat-label">時間</span><span id="timer" class="stat-value">00:00</span></div>
-          <div class="stat"><span class="stat-label">分數</span><span id="score" class="stat-value">0</span></div>
-          <div class="stat"><span class="stat-label">進度</span><span id="progress" class="stat-value">0/0</span></div>
-        </div>
-      </header>
-      <div class="game-board">
-        <div class="column"><h2>算式</h2><div id="expressions" class="cards"></div></div>
-        <div class="column"><h2>答案</h2><div id="answers" class="cards"></div></div>
+<!-- ========== START ========== -->
+<section id="start-screen" class="screen active">
+  <div class="card">
+    <h1>數學配對 v2</h1>
+    <p class="subtitle">適應性難度 + AI 智慧分析</p>
+    <form id="start-form">
+      <div class="form-group">
+        <label>班級</label>
+        <input type="text" id="class-input" placeholder="例如：三年甲班" required>
       </div>
-    </section>
+      <div class="form-group">
+        <label>座號</label>
+        <input type="number" id="seat-input" placeholder="例如：5" min="1" required>
+      </div>
+      <div style="display:flex;gap:12px">
+        <div class="form-group" style="flex:1">
+          <label>題數</label>
+          <select id="question-count">
+            <option value="6">6 題</option>
+            <option value="10" selected>10 題</option>
+            <option value="15">15 題</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:1">
+          <label>起始難度</label>
+          <select id="start-diff">
+            <option value="1">L1 基礎</option>
+            <option value="2" selected>L2 中等</option>
+            <option value="3">L3 進階</option>
+            <option value="4">L4 挑戰</option>
+          </select>
+        </div>
+      </div>
+      </div>
+      <details style="margin-top:12px;text-align:left;border:1px solid #e0e0e0;border-radius:8px;padding:10px 14px">
+        <summary style="cursor:pointer;color:#667eea;font-size:.9rem">AI 設定（老師專用）</summary>
+        <div style="margin-top:8px">
+          <label for="groq-input" style="font-size:.85rem">Groq API Key</label>
+          <input type="password" id="groq-input" placeholder="貼上 Groq API Key，只需輸入一次" style="margin-top:4px;font-size:.9rem">
+          <button type="button" id="groq-save" class="btn btn-primary" style="margin-top:8px;padding:8px 20px;font-size:.9rem">儲存金鑰</button>
+          <span id="groq-status" style="margin-left:10px;font-size:.82rem"></span>
+        </div>
+      </details>
+      <button type="submit" class="btn btn-primary" style="margin-top:14px">開始遊戲</button>
+    </form>
+  </div>
+</section>
 
-    <section id="end-screen" class="screen">
-      <div class="card">
-        <h1>遊戲結束</h1>
-        <div class="result-grid">
-          <div class="result-item"><span class="result-label">班級</span><span id="end-class" class="result-value">-</span></div>
-          <div class="result-item"><span class="result-label">座號</span><span id="end-seat" class="result-value">-</span></div>
-          <div class="result-item"><span class="result-label">總題數</span><span id="end-total" class="result-value">-</span></div>
-          <div class="result-item"><span class="result-label">正確題數</span><span id="end-correct" class="result-value">-</span></div>
-          <div class="result-item"><span class="result-label">錯誤次數</span><span id="end-wrong" class="result-value">-</span></div>
-          <div class="result-item"><span class="result-label">遊戲時間</span><span id="end-time" class="result-value">-</span></div>
-          <div class="result-item highlight"><span class="result-label">總分</span><span id="end-score" class="result-value">-</span></div>
-        </div>
-        <div id="save-status" class="save-status"></div>
-        <div class="button-group">
-          <button id="save-btn" class="btn btn-primary">儲存成績</button>
-          <button id="restart-btn" class="btn btn-secondary">再玩一次</button>
-        </div>
-      </div>
-    </section>
+<!-- ========== GAME ========== -->
+<section id="game-screen" class="screen">
+  <header class="game-header">
+    <div class="player-info">
+      <span id="display-class">-</span>
+      <span id="display-seat">-</span>
+    </div>
+    <div class="game-stats">
+      <div class="stat"><span class="stat-label">時間</span><span id="timer" class="stat-value">00:00</span></div>
+      <div class="stat"><span class="stat-label">分數</span><span id="score" class="stat-value">0</span></div>
+      <div class="stat"><span class="stat-label">進度</span><span id="progress" class="stat-value">0/0</span></div>
+    </div>
+  </header>
+
+  <div class="diff-bar-wrap">
+    <span class="diff-label">難度</span>
+    <div class="diff-ticks" id="diff-bar">
+      <div class="diff-tick" data-lv="1">L1</div>
+      <div class="diff-tick" data-lv="2">L2</div>
+      <div class="diff-tick" data-lv="3">L3</div>
+      <div class="diff-tick" data-lv="4">L4</div>
+    </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script>
-    (function() {
-      // ========== Supabase ==========
-      var SUPABASE_URL = "https://deebjpgtujatpefucajc.supabase.co";
-      var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlZWJqcGd0dWphdHBlZnVjYWpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyMTk3NjgsImV4cCI6MjEwMDc5NTc2OH0.u9Q8Vv4z0XsPVN8zJVtdbo3_2Sv8lv9JD5SXbuWo5a4";
-      var db;
-      try { db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) { db = null; }
+  <div class="game-board">
+    <div class="column"><h2>算式</h2><div id="expressions" class="cards"></div></div>
+    <div class="column"><h2>答案</h2><div id="answers" class="cards"></div></div>
+  </div>
+</section>
 
-      // ========== DOM refs ==========
-      var $ = function(id) { return document.getElementById(id); };
-      var startScreen = $("start-screen");
-      var gameScreen = $("game-screen");
-      var endScreen = $("end-screen");
-      var startForm = $("start-form");
-      var exprDiv = $("expressions");
-      var ansDiv = $("answers");
-      var timerEl = $("timer");
-      var scoreEl = $("score");
-      var progressEl = $("progress");
-      var dClass = $("display-class");
-      var dSeat = $("display-seat");
-      var saveBtn = $("save-btn");
-      var restartBtn = $("restart-btn");
-      var saveStatus = $("save-status");
+<!-- ========== END ========== -->
+<section id="end-screen" class="screen">
+  <div class="card">
+    <h1>遊戲結束</h1>
+    <div class="result-grid">
+      <div class="result-item"><span class="result-label">班級</span><span id="end-class" class="result-value">-</span></div>
+      <div class="result-item"><span class="result-label">座號</span><span id="end-seat" class="result-value">-</span></div>
+      <div class="result-item"><span class="result-label">總題數</span><span id="end-total" class="result-value">-</span></div>
+      <div class="result-item"><span class="result-label">正確</span><span id="end-correct" class="result-value">-</span></div>
+      <div class="result-item"><span class="result-label">錯誤</span><span id="end-wrong" class="result-value">-</span></div>
+      <div class="result-item"><span class="result-label">時間</span><span id="end-time" class="result-value">-</span></div>
+      <div class="result-item highlight"><span class="result-label">總分</span><span id="end-score" class="result-value">-</span></div>
+      <div class="result-item"><span class="result-label">最終難度</span><span id="end-level" class="result-value">-</span></div>
+    </div>
 
-      // ========== State ==========
-      var state = {
-        cls: "", seat: 0, total: 10,
-        pairs: [],
-        selExpr: null, selAns: null,
-        matched: 0, wrong: 0, score: 0,
-        startTs: 0, timer: null, elapsed: 0, saved: false
-      };
+    <div class="ai-section">
+      <h3>AI 個人化分析</h3>
+      <div id="ai-box" class="ai-box"></div>
+      <div id="diff-suggest" style="text-align:center;margin-top:8px"></div>
+    </div>
 
-      // ========== Helpers ==========
-      function show(s) {
-        [startScreen, gameScreen, endScreen].forEach(function(x) { x.classList.remove("active"); });
-        s.classList.add("active");
-      }
-      function fmt(sec) {
-        var m = Math.floor(sec / 60); var s = sec % 60;
-        return (m < 10 ? "0" + m : "" + m) + ":" + (s < 10 ? "0" + s : "" + s);
-      }
-      function genExpr() {
-        var op = Math.random() < 0.5 ? "+" : "-";
-        var a, b, ans;
-        if (op === "+") { a = rand(1, 20); b = rand(1, 20); ans = a + b; }
-        else { a = rand(2, 20); b = rand(1, a - 1); ans = a - b; }
-        return { id: "q" + Math.random().toString(36).slice(2, 8), text: a + " " + op + " " + b, val: ans };
-      }
-      function rand(lo, hi) { return Math.floor(Math.random() * (hi - lo + 1)) + lo; }
-      function genAll(n) {
-        var list = [], seen = {};
-        while (list.length < n) {
-          var q = genExpr();
-          if (!seen[q.val]) { seen[q.val] = true; list.push(q); }
-        }
-        return list;
-      }
-      function mix(arr) {
-        var a = arr.slice();
-        for (var i = a.length - 1; i > 0; i--) { var j = rand(0, i); var t = a[i]; a[i] = a[j]; a[j] = t; }
-        return a;
-      }
-      function refresh() {
-        timerEl.textContent = fmt(state.elapsed);
-        scoreEl.textContent = state.score;
-        progressEl.textContent = state.matched + "/" + state.total;
-      }
+    <div id="save-status" class="save-status"></div>
+    <div class="button-group">
+      <button id="save-btn" class="btn btn-primary">儲存成績 + AI 分析</button>
+      <button id="restart-btn" class="btn btn-secondary">再玩一次</button>
+    </div>
+  </div>
+</section>
+</div>
 
-      // ========== Timer ==========
-      function startTimer() {
-        state.startTs = Date.now(); state.elapsed = 0; refresh();
-        state.timer = setInterval(function() {
-          state.elapsed = Math.floor((Date.now() - state.startTs) / 1000);
-          refresh();
-        }, 1000);
-      }
-      function stopTimer() {
-        clearInterval(state.timer);
-        state.elapsed = Math.floor((Date.now() - state.startTs) / 1000);
-        refresh();
-      }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+  /* ====== Config ====== */
+  var SUPABASE_URL = "https://deebjpgtujatpefucajc.supabase.co";
+  var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlZWJqcGd0dWphdHBlZnVjYWpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyMTk3NjgsImV4cCI6MjEwMDc5NTc2OH0.u9Q8Vv4z0XsPVN8zJVtdbo3_2Sv8lv9JD5SXbuWo5a4";
+  var GROQ_KEY = localStorage.getItem("groq_key") || "";
 
-      // ========== Cards ==========
-      function makeCard(text, kind, qId, val) {
-        var c = document.createElement("div");
-        c.className = "card-item"; c.textContent = text;
-        c.setAttribute("data-kind", kind);
-        c.setAttribute("data-qid", qId);
-        c.setAttribute("data-val", val);
-        c.onclick = function() { clickCard(c); };
-        return c;
-      }
-      function renderBoard() {
-        exprDiv.innerHTML = ""; ansDiv.innerHTML = "";
-        var exprs = mix(state.pairs);
-        var anss = mix(state.pairs);
-        for (var i = 0; i < exprs.length; i++) {
-          exprDiv.appendChild(makeCard(exprs[i].text, "expr", exprs[i].id, exprs[i].val));
-        }
-        for (var j = 0; j < anss.length; j++) {
-          ansDiv.appendChild(makeCard(anss[j].val, "ans", anss[j].id, anss[j].val));
-        }
-      }
+  var db, groqOk = !!GROQ_KEY;
+  try { db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) { db = null; }
 
-      // ========== Click logic ==========
-      function clickCard(c) {
-        if (c.classList.contains("matched")) return;
-        var kind = c.getAttribute("data-kind");
-        if (kind === "expr") {
-          if (state.selExpr) state.selExpr.classList.remove("selected");
-          state.selExpr = c; c.classList.add("selected");
-        } else {
-          if (state.selAns) state.selAns.classList.remove("selected");
-          state.selAns = c; c.classList.add("selected");
-        }
-        tryMatch();
-      }
-      function tryMatch() {
-        if (!state.selExpr || !state.selAns) return;
-        var v1 = Number(state.selExpr.getAttribute("data-val"));
-        var v2 = Number(state.selAns.getAttribute("data-val"));
-        if (v1 === v2) {
-          state.selExpr.classList.add("matched"); state.selExpr.classList.remove("selected");
-          state.selAns.classList.add("matched"); state.selAns.classList.remove("selected");
-          state.matched++; state.score += 10;
-          state.selExpr = null; state.selAns = null;
-          refresh();
-          if (state.matched >= state.total) finish();
-        } else {
-          state.selExpr.classList.add("wrong"); state.selAns.classList.add("wrong");
-          state.wrong++; state.score = Math.max(0, state.score - 2);
-          refresh();
-          var ex = state.selExpr, an = state.selAns;
-          state.selExpr = null; state.selAns = null;
-          setTimeout(function() { ex.classList.remove("selected", "wrong"); an.classList.remove("selected", "wrong"); }, 500);
-        }
-      }
+  /* ====== DOM ====== */
+  function $(id) { return document.getElementById(id); }
+  var startScreen = $("start-screen"), gameScreen = $("game-screen"), endScreen = $("end-screen");
+  var startForm = $("start-form");
+  var exprDiv = $("expressions"), ansDiv = $("answers");
+  var timerEl = $("timer"), scoreEl = $("score"), progressEl = $("progress");
+  var dClass = $("display-class"), dSeat = $("display-seat");
+  var diffBar = $("diff-bar");
+  var saveBtn = $("save-btn"), restartBtn = $("restart-btn"), saveStatus = $("save-status");
+  var aiBox = $("ai-box"), diffSuggest = $("diff-suggest");
 
-      // ========== End ==========
-      function finish() {
-        stopTimer(); show(endScreen);
-        $("end-class").textContent = state.cls;
-        $("end-seat").textContent = state.seat;
-        $("end-total").textContent = state.total;
-        $("end-correct").textContent = state.matched;
-        $("end-wrong").textContent = state.wrong;
-        $("end-time").textContent = fmt(state.elapsed);
-        $("end-score").textContent = state.score;
-        saveStatus.textContent = ""; saveStatus.className = "save-status";
-        saveBtn.disabled = false; saveBtn.textContent = "儲存成績";
-        state.saved = false;
-      }
-      function restart() { show(startScreen); }
-      function saveScore() {
-        if (!db) { saveStatus.textContent = "無法連線資料庫"; saveStatus.className = "save-status error"; return; }
-        if (state.saved) { saveStatus.textContent = "已儲存過了"; saveStatus.className = "save-status success"; return; }
-        saveBtn.disabled = true; saveBtn.textContent = "儲存中...";
-        saveStatus.textContent = "儲存中..."; saveStatus.className = "save-status loading";
-        db.from("數學遊戲紀錄").insert({
-          班級: state.cls, 座號: state.seat,
-          分數: state.score, 遊戲秒數: state.elapsed,
-          總題數: state.total, 正確題數: state.matched
-        }).then(function(r) {
-          if (r.error) throw r.error;
-          state.saved = true;
-          saveStatus.textContent = "成績已儲存至 Supabase！";
-          saveStatus.className = "save-status success";
-          saveBtn.textContent = "已儲存"; saveBtn.disabled = true;
-        }).catch(function(e) {
-          saveStatus.textContent = "儲存失敗，再試一次";
-          saveStatus.className = "save-status error";
-          saveBtn.disabled = false; saveBtn.textContent = "重新儲存";
-        });
-      }
+  /* ====== Difficulty ====== */
+  var DIFF = [
+    { name:"L1 基礎", range:{lo:1,hi:10}, ops:["+"] },
+    { name:"L2 中等", range:{lo:1,hi:20}, ops:["+","-"] },
+    { name:"L3 進階", range:{lo:10,hi:50}, ops:["+","-"] },
+    { name:"L4 挑戰", range:{lo:10,hi:99}, ops:["+","-"] }
+  ];
 
-      // ========== Start ==========
-      function startGame(e) {
-        e.preventDefault();
-        state.cls = document.getElementById("class-input").value.trim();
-        state.seat = parseInt(document.getElementById("seat-input").value, 10);
-        state.total = parseInt(document.getElementById("question-count").value, 10);
-        state.pairs = genAll(state.total);
-        state.selExpr = null; state.selAns = null;
-        state.matched = 0; state.wrong = 0; state.score = 0; state.saved = false;
-        dClass.textContent = state.cls;
-        dSeat.textContent = "座號 " + state.seat;
-        show(gameScreen); renderBoard(); startTimer();
-      }
+  /* ====== State ====== */
+  var G = {
+    cls:"", seat:0, total:10, diffLv:2, diffLog:[],
+    pairs:[], selExpr:null, selAns:null,
+    matched:0, wrong:0, score:0,
+    startTs:0, timer:null, elapsed:0, saved:false,
+    trail:[], /* [{op, a, b, ans, correct, ms, diff}] */
+    aiText:""
+  };
 
-      // ========== Bind ==========
-      startForm.addEventListener("submit", startGame);
-      saveBtn.addEventListener("click", saveScore);
-      restartBtn.addEventListener("click", restart);
-      show(startScreen);
-    })();
-  </script>
+  /* ====== Helpers ====== */
+  function show(s) {
+    [startScreen,gameScreen,endScreen].forEach(function(x){x.classList.remove("active")});
+    s.classList.add("active");
+  }
+  function fmt(sec) {
+    var m = Math.floor(sec/60), s = sec%60;
+    return (m<10?"0"+m:""+m)+":"+(s<10?"0"+s:""+s);
+  }
+  function rand(lo,hi) { return Math.floor(Math.random()*(hi-lo+1))+lo; }
+
+  /* ====== Generate ====== */
+  function genOne(lv) {
+    var d = DIFF[lv-1], op = d.ops[rand(0,d.ops.length-1)];
+    var lo = d.range.lo, hi = d.range.hi;
+    var a, b, ans;
+    if (op === "+") {
+      var maxA = Math.min(hi-1, Math.floor(hi*0.7));
+      a = rand(lo, maxA); b = rand(lo, Math.min(hi-a, Math.floor(hi*0.7))); ans = a+b;
+    } else {
+      a = rand(lo+2, hi); b = rand(lo, a-1); ans = a-b;
+    }
+    return { op:op, a:a, b:b, ans:ans, text:a+" "+op+" "+b };
+  }
+  function genAll(n, lv) {
+    var list = [], seen = {};
+    while (list.length < n) {
+      var q = genOne(lv);
+      if (!seen[q.ans]) { seen[q.ans]=true; list.push(q); }
+    }
+    return list;
+  }
+  function mix(arr) {
+    var a = arr.slice();
+    for (var i = a.length-1; i>0; i--) { var j=rand(0,i), t=a[i]; a[i]=a[j]; a[j]=t; }
+    return a;
+  }
+  function refresh() {
+    timerEl.textContent = fmt(G.elapsed);
+    scoreEl.textContent = G.score;
+    progressEl.textContent = G.matched+"/"+G.total;
+  }
+
+  /* ====== Difficulty bar ====== */
+  function updateDiffBar() {
+    var ticks = diffBar.querySelectorAll(".diff-tick");
+    for (var i=0; i<ticks.length; i++) {
+      var lv = parseInt(ticks[i].getAttribute("data-lv"));
+      ticks[i].className = "diff-tick";
+      if (lv < G.diffLv) ticks[i].classList.add("passed");
+      if (lv === G.diffLv) ticks[i].classList.add("active");
+    }
+  }
+
+  /* ====== Dynamic diff adjust ====== */
+  function maybeAdjust() {
+    var recent = G.trail.slice(-5);
+    if (recent.length < 5) return;
+    var correct = 0, totalMs = 0;
+    for (var i=0; i<recent.length; i++) {
+      if (recent[i].correct) correct++;
+      totalMs += recent[i].ms;
+    }
+    var rate = correct / recent.length;
+    var avgMs = totalMs / recent.length;
+    var changed = false;
+    if (rate >= 0.8 && avgMs < 5000 && G.diffLv < 4) { G.diffLv++; changed = true; }
+    else if ((rate < 0.4 || avgMs > 15000) && G.diffLv > 1) { G.diffLv--; changed = true; }
+    if (changed) {
+      G.diffLog.push({at: G.matched, lv: G.diffLv});
+      updateDiffBar();
+      regenRemaining();
+    }
+  }
+  function regenRemaining() {
+    var remaining = G.total - G.matched;
+    if (remaining <= 0) return;
+    var newPairs = genAll(remaining, G.diffLv);
+    // replace unmatched pairs in place
+    var idx = 0;
+    for (var i = 0; i < G.pairs.length && idx < newPairs.length; i++) {
+      if (!G.pairs[i].matched) {
+        G.pairs[i] = newPairs[idx];
+        G.pairs[i].matched = false;
+        idx++;
+      }
+    }
+    renderBoard();
+  }
+
+  /* ====== Cards ====== */
+  function makeCard(text, kind, qIdx, val) {
+    var c = document.createElement("div");
+    c.className = "card-item"; c.textContent = text;
+    c.setAttribute("data-kind", kind);
+    c.setAttribute("data-qidx", qIdx);
+    c.setAttribute("data-val", val);
+    c.onclick = function() { clickCard(c); };
+    return c;
+  }
+  function renderBoard() {
+    exprDiv.innerHTML = ""; ansDiv.innerHTML = "";
+    var exprs = [], anss = [];
+    for (var i = 0; i < G.pairs.length; i++) {
+      if (G.pairs[i].matched) continue;
+      exprs.push({text: G.pairs[i].text, idx: i, val: G.pairs[i].ans});
+      anss.push({val: G.pairs[i].ans, idx: i});
+    }
+    var x = mix(exprs), a = mix(anss);
+    for (var j = 0; j < x.length; j++) exprDiv.appendChild(makeCard(x[j].text, "expr", x[j].idx, x[j].val));
+    for (var k = 0; k < a.length; k++) ansDiv.appendChild(makeCard(a[k].val, "ans", a[k].idx, a[k].val));
+  }
+
+  /* ====== Click ====== */
+  function clickCard(c) {
+    if (c.classList.contains("matched")) return;
+    var kind = c.getAttribute("data-kind");
+    if (kind === "expr") {
+      if (G.selExpr) G.selExpr.classList.remove("selected");
+      G.selExpr = c; c.classList.add("selected");
+    } else {
+      if (G.selAns) G.selAns.classList.remove("selected");
+      G.selAns = c; c.classList.add("selected");
+    }
+    tryMatch();
+  }
+
+  var lastClickTs = 0;
+
+  function tryMatch() {
+    if (!G.selExpr || !G.selAns) return;
+    var v1 = Number(G.selExpr.getAttribute("data-val"));
+    var v2 = Number(G.selAns.getAttribute("data-val"));
+    var qIdx = parseInt(G.selExpr.getAttribute("data-qidx"));
+    var now = Date.now();
+    var ms = lastClickTs > 0 ? now - lastClickTs : 0;
+    lastClickTs = now;
+
+    if (v1 === v2) {
+      G.selExpr.classList.add("matched"); G.selExpr.classList.remove("selected");
+      G.selAns.classList.add("matched"); G.selAns.classList.remove("selected");
+      G.matched++; G.score += 10;
+      G.pairs[qIdx].matched = true;
+      var item = G.pairs[qIdx];
+      G.trail.push({op:item.op, a:item.a, b:item.b, ans:item.ans, correct:true, ms:ms, diff:G.diffLv});
+      G.selExpr = null; G.selAns = null;
+      refresh(); maybeAdjust();
+      if (G.matched >= G.total) finish();
+    } else {
+      G.selExpr.classList.add("wrong"); G.selAns.classList.add("wrong");
+      G.wrong++; G.score = Math.max(0, G.score-2);
+      var item = G.pairs[qIdx];
+      G.trail.push({op:item.op, a:item.a, b:item.b, ans:item.ans, correct:false, ms:ms, diff:G.diffLv});
+      refresh();
+      var ex = G.selExpr, an = G.selAns;
+      G.selExpr = null; G.selAns = null;
+      setTimeout(function(){ex.classList.remove("selected","wrong");an.classList.remove("selected","wrong")},500);
+    }
+  }
+
+  /* ====== Timer ====== */
+  function startTimer() {
+    G.startTs = Date.now(); G.elapsed = 0; refresh();
+    G.timer = setInterval(function(){ G.elapsed = Math.floor((Date.now()-G.startTs)/1000); refresh() }, 1000);
+  }
+  function stopTimer() {
+    clearInterval(G.timer);
+    G.elapsed = Math.floor((Date.now()-G.startTs)/1000); refresh();
+  }
+
+  /* ====== AI ====== */
+  function askAI(cb) {
+    if (!groqOk) { cb("（AI 未設定，無法產出分析）"); return; }
+    var prompt = "你是小學數學老師的 AI 助手。請根據以下學生的答題數據，用繁體中文給一段約 150 字的個人化分析與建議：\n\n";
+    prompt += "班級："+G.cls+"\n座號："+G.seat+"\n總題數："+G.total+"\n正確："+G.matched+"\n錯誤："+G.wrong+"\n";
+    prompt += "用時："+fmt(G.elapsed)+"\n起始難度：L"+$("start-diff").value+"\n最終難度：L"+G.diffLv+"\n\n";
+    prompt += "答題軌跡（依序）：\n";
+    for (var i=0; i<G.trail.length; i++) {
+      var t = G.trail[i];
+      prompt += (i+1)+". "+(t.correct?"✓":"✗")+" "+t.a+" "+t.op+" "+t.b+" = "+t.ans+" [難度L"+t.diff+" 用時"+t.ms+"ms]\n";
+    }
+    prompt += "\n請分析：1.強項 2.弱項 3.難度變化趨勢 4.具體練習建議。不需覆述數據，直接給分析。字數控制在 150 字內。";
+
+    fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method:"POST",
+      headers:{"Authorization":"Bearer "+GROQ_KEY,"Content-Type":"application/json"},
+      body: JSON.stringify({
+        model:"llama-3.3-70b-versatile",
+        messages:[{role:"user",content:prompt}],
+        max_tokens:300, temperature:0.7
+      })
+    }).then(function(r){ return r.json(); })
+      .then(function(j){
+        var txt = j.choices && j.choices[0] ? j.choices[0].message.content : "AI 回覆格式錯誤";
+        G.aiText = txt; cb(txt);
+      })
+      .catch(function(e){ cb("AI 分析失敗："+e.message); });
+  }
+
+  /* ====== End ====== */
+  function finish() {
+    stopTimer(); show(endScreen);
+    $("end-class").textContent = G.cls;
+    $("end-seat").textContent = G.seat;
+    $("end-total").textContent = G.total;
+    $("end-correct").textContent = G.matched;
+    $("end-wrong").textContent = G.wrong;
+    $("end-time").textContent = fmt(G.elapsed);
+    $("end-score").textContent = G.score;
+    $("end-level").textContent = "L"+G.diffLv+" "+DIFF[G.diffLv-1].name;
+    saveStatus.textContent = ""; saveStatus.className = "save-status";
+    saveBtn.disabled = false; saveBtn.textContent = "儲存成績 + AI 分析";
+    G.saved = false;
+
+    // suggest
+    var suggest = DIFF[G.diffLv-1].name + " — 下次建議從 L"+G.diffLv+" 開始";
+    diffSuggest.innerHTML = '<span class="diff-result l'+G.diffLv+'">'+suggest+'</span>';
+
+    // AI
+    aiBox.textContent = "AI 分析中，請稍候...";
+    aiBox.className = "ai-box loading";
+    askAI(function(txt){ aiBox.textContent = txt; aiBox.className = "ai-box"; });
+  }
+  function restart() {
+    $("start-diff").value = G.diffLv; show(startScreen);
+  }
+  function saveScore() {
+    if (!db) { saveStatus.textContent = "無法連線資料庫"; saveStatus.className="save-status error"; return; }
+    if (G.saved) { saveStatus.textContent = "已儲存"; saveStatus.className="save-status success"; return; }
+    saveBtn.disabled = true; saveBtn.textContent = "儲存中...";
+    saveStatus.textContent = "儲存中..."; saveStatus.className="save-status loading";
+    var record = {
+      "班級": G.cls, "座號": G.seat, "分數": G.score,
+      "遊戲秒數": G.elapsed, "總題數": G.total, "正確題數": G.matched,
+      "答題軌跡": JSON.stringify(G.trail),
+      "AI分析": G.aiText,
+      "難度歷程": JSON.stringify({start: parseInt($("start-diff").value), end: G.diffLv, log: G.diffLog})
+    };
+    db.from("數學遊戲紀錄").insert(record).then(function(r){
+      if (r.error) throw r.error;
+      G.saved = true;
+      saveStatus.textContent = "已儲存 + AI 分析已保存！";
+      saveStatus.className="save-status success";
+      saveBtn.textContent = "已儲存"; saveBtn.disabled = true;
+    }).catch(function(e){
+      saveStatus.textContent = "儲存失敗，再試一次";
+      saveStatus.className="save-status error";
+      saveBtn.disabled = false; saveBtn.textContent = "重新儲存";
+    });
+  }
+
+  /* ====== Start ====== */
+  function startGame(e) {
+    e.preventDefault();
+    G.cls = $("class-input").value.trim();
+    G.seat = parseInt($("seat-input").value, 10);
+    G.total = parseInt($("question-count").value, 10);
+    G.diffLv = parseInt($("start-diff").value, 10);
+    G.diffLog = [{at:0, lv:G.diffLv}];
+    G.pairs = genAll(G.total, G.diffLv);
+    for (var i=0; i<G.pairs.length; i++) G.pairs[i].matched = false;
+    G.selExpr = null; G.selAns = null;
+    G.matched = 0; G.wrong = 0; G.score = 0; G.saved = false;
+    G.trail = []; G.aiText = ""; lastClickTs = 0;
+    dClass.textContent = G.cls;
+    dSeat.textContent = "座號 "+G.seat;
+    updateDiffBar();
+    show(gameScreen); renderBoard(); startTimer();
+  }
+
+  /* ====== Groq key management ====== */
+  function loadGroqKey() {
+    var k = localStorage.getItem("groq_key") || "";
+    GROQ_KEY = k; groqOk = !!k;
+    var inp = $("groq-input");
+    if (inp) inp.value = k;
+    if (groqOk) {
+      var st = $("groq-status"); if (st) st.textContent = "已設定";
+    }
+  }
+  function saveGroqKey() {
+    var inp = $("groq-input"); var st = $("groq-status");
+    if (!inp) return;
+    var k = inp.value.trim();
+    if (!k) { if (st) st.textContent = "請輸入金鑰"; return; }
+    localStorage.setItem("groq_key", k);
+    GROQ_KEY = k; groqOk = true;
+    if (st) { st.textContent = "已儲存"; st.style.color = "#28a745"; }
+  }
+
+  startForm.addEventListener("submit", startGame);
+  saveBtn.addEventListener("click", saveScore);
+  restartBtn.addEventListener("click", restart);
+  var groqSaveBtn = $("groq-save");
+  if (groqSaveBtn) groqSaveBtn.addEventListener("click", saveGroqKey);
+  loadGroqKey();
+  show(startScreen);
+})();
+</script>
 </body>
 </html>

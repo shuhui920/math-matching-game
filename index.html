@@ -7,21 +7,29 @@
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     body{
-      font-family:"Microsoft JhengHei",sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-      min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px
+      font-family:"Microsoft JhengHei","PingFang TC",sans-serif;
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      min-height:100vh;padding:30px 20px;margin:0
     }
-    .container{width:100%;max-width:950px}
-    .screen{display:none}.screen.active{display:block}
+    .container{
+      max-width:1100px;margin:0 auto
+    }
+    .screen{display:none}
+    .screen.active{display:block}
+
     .card{
-      background:white;border-radius:20px;padding:40px;box-shadow:0 20px 60px rgba(0,0,0,.2);text-align:center
+      background:white;border-radius:20px;padding:48px 40px;
+      box-shadow:0 20px 60px rgba(0,0,0,.2);text-align:center;
+      margin:0 auto;max-width:500px
     }
-    h1{font-size:2rem;color:#333;margin-bottom:8px}
+    h1{font-size:2rem;color:#333;margin-bottom:6px}
     .subtitle{color:#666;margin-bottom:28px;font-size:1.05rem}
-    form{max-width:420px;margin:0 auto;text-align:left}
+    form{text-align:left}
     .form-group{margin-bottom:18px}
     label{display:block;margin-bottom:6px;color:#444;font-weight:bold;font-size:.95rem}
     input,select{
-      width:100%;padding:12px 14px;border:2px solid #e0e0e0;border-radius:10px;font-size:1rem;transition:border-color .3s
+      width:100%;padding:12px 14px;border:2px solid #e0e0e0;border-radius:10px;font-size:1rem;
+      transition:border-color .3s
     }
     input:focus,select:focus{outline:none;border-color:#667eea}
     .btn{
@@ -29,110 +37,120 @@
       font-size:1.1rem;font-weight:bold;cursor:pointer;transition:transform .2s,box-shadow .2s
     }
     .btn:hover{transform:translateY(-2px)}
-    .btn-primary{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;box-shadow:0 4px 15px rgba(102,126,234,.4)}
+    .btn-primary{
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;
+      box-shadow:0 4px 15px rgba(102,126,234,.4)
+    }
     .btn-secondary{background:#f0f0f0;color:#444;margin-left:10px}
+    .btn-full{width:100%;margin-top:6px}
     .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
 
-    /* header */
     .game-header{
       background:white;border-radius:16px;padding:16px 24px;margin-bottom:16px;
       display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
       box-shadow:0 4px 20px rgba(0,0,0,.1)
     }
-    .player-info{display:flex;gap:14px;font-weight:bold;color:#333}
+    .player-info{display:flex;gap:14px;font-weight:bold;color:#333;font-size:1.05rem}
     .game-stats{display:flex;gap:22px}
     .stat{text-align:center}
     .stat-label{display:block;font-size:.82rem;color:#888;margin-bottom:2px}
-    .stat-value{display:block;font-size:1.25rem;font-weight:bold;color:#667eea}
+    .stat-value{display:block;font-size:1.3rem;font-weight:bold;color:#667eea}
 
-    /* difficulty bar */
     .diff-bar-wrap{
-      background:white;border-radius:12px;padding:10px 20px;margin-bottom:14px;
-      box-shadow:0 2px 12px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px
+      background:white;border-radius:14px;padding:12px 28px;margin-bottom:16px;
+      box-shadow:0 2px 12px rgba(0,0,0,.08);display:flex;align-items:center;gap:18px
     }
-    .diff-label{font-size:.85rem;font-weight:bold;color:#555;white-space:nowrap}
-    .diff-ticks{display:flex;flex:1;position:relative;justify-content:space-between}
+    .diff-label{font-size:.9rem;font-weight:bold;color:#555;white-space:nowrap;min-width:36px}
+    .diff-ticks{flex:1;display:flex;position:relative;justify-content:space-between;height:36px;align-items:center}
     .diff-ticks::before{
-      content:"";position:absolute;top:50%;left:0;right:0;height:4px;background:#e0e0e0;
-      border-radius:2px;transform:translateY(-50%)
+      content:"";position:absolute;top:50%;left:0;right:0;height:6px;background:#e0e0e0;
+      border-radius:3px;transform:translateY(-50%)
     }
     .diff-tick{
-      position:relative;z-index:1;width:32px;height:32px;border-radius:50%;
+      position:relative;z-index:1;width:38px;height:38px;border-radius:50%;
       display:flex;align-items:center;justify-content:center;
-      font-size:.75rem;font-weight:bold;background:white;border:3px solid #e0e0e0;color:#aaa;
+      font-size:.78rem;font-weight:bold;background:white;border:3px solid #e0e0e0;color:#aaa;
       transition:all .3s
     }
-    .diff-tick.active{background:#667eea;border-color:#667eea;color:white;box-shadow:0 0 12px rgba(102,126,234,.5)}
-    .diff-tick.passed{background:#c3d9ff;border-color:#667eea;color:#667eea}
+    .diff-tick.active{background:#667eea;border-color:#667eea;color:white;box-shadow:0 0 14px rgba(102,126,234,.5)}
+    .diff-tick.passed{background:#cfe0ff;border-color:#667eea;color:#667eea}
 
-    /* board */
-    .game-board{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .column{background:white;border-radius:18px;padding:20px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
-    .column h2{text-align:center;color:#667eea;margin-bottom:14px;font-size:1.2rem}
-    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:10px}
+    .game-board{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .column{
+      background:white;border-radius:18px;padding:24px;
+      box-shadow:0 4px 20px rgba(0,0,0,.1)
+    }
+    .column h2{text-align:center;color:#667eea;margin-bottom:16px;font-size:1.25rem}
+    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
     .card-item{
       background:linear-gradient(135deg,#f5f7fa 0%,#e6eaf0 100%);
-      border:3px solid transparent;border-radius:12px;padding:15px 6px;
-      text-align:center;cursor:pointer;font-size:1.1rem;font-weight:bold;
-      color:#333;min-height:52px;display:flex;align-items:center;
+      border:3px solid transparent;border-radius:14px;padding:20px 8px;
+      text-align:center;cursor:pointer;font-size:1.15rem;font-weight:bold;
+      color:#333;min-height:62px;display:flex;align-items:center;
       justify-content:center;user-select:none;transition:all .25s
     }
     .card-item:hover{transform:translateY(-3px);box-shadow:0 6px 15px rgba(0,0,0,.15);border-color:#667eea}
-    .card-item.selected{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border-color:#667eea;transform:scale(1.06);box-shadow:0 8px 20px rgba(102,126,234,.4)}
+    .card-item.selected{
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;
+      border-color:#667eea;transform:scale(1.06);box-shadow:0 8px 20px rgba(102,126,234,.4)
+    }
     .card-item.matched{visibility:hidden;pointer-events:none}
     .card-item.wrong{animation:shake .4s;background:#ffe6e6;border-color:#ff6b6b}
     @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 
-    /* end */
-    .result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;margin:26px 0}
-    .result-item{background:#f8f9fa;border-radius:12px;padding:15px}
-    .result-item.highlight{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white}
-    .result-label{display:block;font-size:.85rem;margin-bottom:4px;opacity:.9}
-    .result-value{display:block;font-size:1.4rem;font-weight:bold}
-    .button-group{margin-top:24px}
-    .save-status{margin:14px 0;min-height:22px;font-weight:bold}
+    .result-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:28px 0
+    }
+    .result-item{background:#f8f9fa;border-radius:12px;padding:16px;text-align:center}
+    .result-item.highlight{
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white
+    }
+    .result-label{display:block;font-size:.85rem;margin-bottom:4px;opacity:.92}
+    .result-value{display:block;font-size:1.45rem;font-weight:bold}
+    .button-group{margin-top:26px}
+    .save-status{margin:14px 0;min-height:22px;font-weight:bold;text-align:center}
     .save-status.success{color:#28a745}.save-status.error{color:#dc3545}.save-status.loading{color:#667eea}
 
-    /* ai */
-    .ai-section{margin-top:24px;text-align:left;max-width:600px;margin-left:auto;margin-right:auto}
-    .ai-section h3{color:#667eea;margin-bottom:10px;font-size:1.1rem}
+    .ai-section{margin:24px auto 0;text-align:left;max-width:520px}
+    .ai-section h3{color:#667eea;margin-bottom:10px;font-size:1.15rem;text-align:center}
     .ai-box{
-      background:#f8f9ff;border:2px solid #d0d5f0;border-radius:12px;padding:18px;
-      font-size:.95rem;line-height:1.7;color:#333;white-space:pre-wrap;min-height:64px
+      background:#f8f9ff;border:2px solid #d0d5f0;border-radius:12px;padding:20px;
+      font-size:.95rem;line-height:1.75;color:#333;white-space:pre-wrap;min-height:72px
     }
     .ai-box.loading{color:#999;font-style:italic}
-
-    .diff-result{display:inline-block;padding:6px 16px;border-radius:20px;font-weight:bold;font-size:1rem;margin-top:8px}
+    .diff-result{display:inline-block;padding:6px 18px;border-radius:20px;font-weight:bold;font-size:1rem;margin-top:8px}
     .diff-result.l1{background:#e8f5e9;color:#2e7d32}
     .diff-result.l2{background:#e3f2fd;color:#1565c0}
     .diff-result.l3{background:#fff3e0;color:#ef6c00}
     .diff-result.l4{background:#fce4ec;color:#c62828}
 
-    @media(max-width:768px){
+    @media(max-width:800px){
       .game-board{grid-template-columns:1fr}
+      .result-grid{grid-template-columns:repeat(2,1fr)}
+      .cards{grid-template-columns:repeat(auto-fill,minmax(95px,1fr))}
+      .card-item{font-size:1rem;padding:14px 5px;min-height:50px}
+      .card{padding:30px 22px}h1{font-size:1.4rem}
       .game-header{flex-direction:column;text-align:center}
-      .cards{grid-template-columns:repeat(auto-fill,minmax(85px,1fr))}
-      .card-item{font-size:.95rem;padding:12px 5px}
-      .card{padding:24px}h1{font-size:1.4rem}
     }
   </style>
 </head>
 <body>
 <div class="container">
 
-<!-- ========== START ========== -->
 <section id="start-screen" class="screen active">
   <div class="card">
     <h1>數學配對 v2</h1>
     <p class="subtitle">適應性難度 + AI 智慧分析</p>
     <form id="start-form">
-      <div class="form-group">
-        <label>班級</label>
-        <input type="text" id="class-input" placeholder="例如：三年甲班" required>
-      </div>
-      <div class="form-group">
-        <label>座號</label>
-        <input type="number" id="seat-input" placeholder="例如：5" min="1" required>
+      <div style="display:flex;gap:12px">
+        <div class="form-group" style="flex:1">
+          <label>班級</label>
+          <input type="text" id="class-input" placeholder="三年甲班" required>
+        </div>
+        <div class="form-group" style="flex:1">
+          <label>座號</label>
+          <input type="number" id="seat-input" placeholder="5" min="1" required>
+        </div>
       </div>
       <div style="display:flex;gap:12px">
         <div class="form-group" style="flex:1">
@@ -153,22 +171,20 @@
           </select>
         </div>
       </div>
-      </div>
-      <details style="margin-top:12px;text-align:left;border:1px solid #e0e0e0;border-radius:8px;padding:10px 14px">
+      <details style="margin:0 0 14px;text-align:left;border:1px solid #e0e0e0;border-radius:8px;padding:10px 14px;background:#fafafa">
         <summary style="cursor:pointer;color:#667eea;font-size:.9rem">AI 設定（老師專用）</summary>
         <div style="margin-top:8px">
           <label for="groq-input" style="font-size:.85rem">Groq API Key</label>
-          <input type="password" id="groq-input" placeholder="貼上 Groq API Key，只需輸入一次" style="margin-top:4px;font-size:.9rem">
+          <input type="password" id="groq-input" placeholder="貼上 Groq API Key" style="margin-top:4px;font-size:.9rem">
           <button type="button" id="groq-save" class="btn btn-primary" style="margin-top:8px;padding:8px 20px;font-size:.9rem">儲存金鑰</button>
           <span id="groq-status" style="margin-left:10px;font-size:.82rem"></span>
         </div>
       </details>
-      <button type="submit" class="btn btn-primary" style="margin-top:14px">開始遊戲</button>
+      <button type="submit" class="btn btn-primary btn-full">開始遊戲</button>
     </form>
   </div>
 </section>
 
-<!-- ========== GAME ========== -->
 <section id="game-screen" class="screen">
   <header class="game-header">
     <div class="player-info">
@@ -198,9 +214,8 @@
   </div>
 </section>
 
-<!-- ========== END ========== -->
 <section id="end-screen" class="screen">
-  <div class="card">
+  <div class="card" style="max-width:620px">
     <h1>遊戲結束</h1>
     <div class="result-grid">
       <div class="result-item"><span class="result-label">班級</span><span id="end-class" class="result-value">-</span></div>
@@ -231,7 +246,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 (function(){
-  /* ====== Config ====== */
   var SUPABASE_URL = "https://deebjpgtujatpefucajc.supabase.co";
   var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlZWJqcGd0dWphdHBlZnVjYWpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyMTk3NjgsImV4cCI6MjEwMDc5NTc2OH0.u9Q8Vv4z0XsPVN8zJVtdbo3_2Sv8lv9JD5SXbuWo5a4";
   var GROQ_KEY = localStorage.getItem("groq_key") || "";
@@ -239,7 +253,6 @@
   var db, groqOk = !!GROQ_KEY;
   try { db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) { db = null; }
 
-  /* ====== DOM ====== */
   function $(id) { return document.getElementById(id); }
   var startScreen = $("start-screen"), gameScreen = $("game-screen"), endScreen = $("end-screen");
   var startForm = $("start-form");
@@ -250,7 +263,6 @@
   var saveBtn = $("save-btn"), restartBtn = $("restart-btn"), saveStatus = $("save-status");
   var aiBox = $("ai-box"), diffSuggest = $("diff-suggest");
 
-  /* ====== Difficulty ====== */
   var DIFF = [
     { name:"L1 基礎", range:{lo:1,hi:10}, ops:["+"] },
     { name:"L2 中等", range:{lo:1,hi:20}, ops:["+","-"] },
@@ -258,17 +270,16 @@
     { name:"L4 挑戰", range:{lo:10,hi:99}, ops:["+","-"] }
   ];
 
-  /* ====== State ====== */
   var G = {
     cls:"", seat:0, total:10, diffLv:2, diffLog:[],
     pairs:[], selExpr:null, selAns:null,
     matched:0, wrong:0, score:0,
     startTs:0, timer:null, elapsed:0, saved:false,
-    trail:[], /* [{op, a, b, ans, correct, ms, diff}] */
-    aiText:""
+    trail:[], aiText:""
   };
 
-  /* ====== Helpers ====== */
+  var lastClickTs = 0;
+
   function show(s) {
     [startScreen,gameScreen,endScreen].forEach(function(x){x.classList.remove("active")});
     s.classList.add("active");
@@ -279,7 +290,6 @@
   }
   function rand(lo,hi) { return Math.floor(Math.random()*(hi-lo+1))+lo; }
 
-  /* ====== Generate ====== */
   function genOne(lv) {
     var d = DIFF[lv-1], op = d.ops[rand(0,d.ops.length-1)];
     var lo = d.range.lo, hi = d.range.hi;
@@ -311,7 +321,6 @@
     progressEl.textContent = G.matched+"/"+G.total;
   }
 
-  /* ====== Difficulty bar ====== */
   function updateDiffBar() {
     var ticks = diffBar.querySelectorAll(".diff-tick");
     for (var i=0; i<ticks.length; i++) {
@@ -322,7 +331,6 @@
     }
   }
 
-  /* ====== Dynamic diff adjust ====== */
   function maybeAdjust() {
     var recent = G.trail.slice(-5);
     if (recent.length < 5) return;
@@ -346,7 +354,6 @@
     var remaining = G.total - G.matched;
     if (remaining <= 0) return;
     var newPairs = genAll(remaining, G.diffLv);
-    // replace unmatched pairs in place
     var idx = 0;
     for (var i = 0; i < G.pairs.length && idx < newPairs.length; i++) {
       if (!G.pairs[i].matched) {
@@ -358,7 +365,6 @@
     renderBoard();
   }
 
-  /* ====== Cards ====== */
   function makeCard(text, kind, qIdx, val) {
     var c = document.createElement("div");
     c.className = "card-item"; c.textContent = text;
@@ -381,7 +387,6 @@
     for (var k = 0; k < a.length; k++) ansDiv.appendChild(makeCard(a[k].val, "ans", a[k].idx, a[k].val));
   }
 
-  /* ====== Click ====== */
   function clickCard(c) {
     if (c.classList.contains("matched")) return;
     var kind = c.getAttribute("data-kind");
@@ -394,8 +399,6 @@
     }
     tryMatch();
   }
-
-  var lastClickTs = 0;
 
   function tryMatch() {
     if (!G.selExpr || !G.selAns) return;
@@ -428,7 +431,6 @@
     }
   }
 
-  /* ====== Timer ====== */
   function startTimer() {
     G.startTs = Date.now(); G.elapsed = 0; refresh();
     G.timer = setInterval(function(){ G.elapsed = Math.floor((Date.now()-G.startTs)/1000); refresh() }, 1000);
@@ -438,9 +440,8 @@
     G.elapsed = Math.floor((Date.now()-G.startTs)/1000); refresh();
   }
 
-  /* ====== AI ====== */
   function askAI(cb) {
-    if (!groqOk) { cb("（AI 未設定，無法產出分析）"); return; }
+    if (!groqOk) { cb("（尚未設定 Groq API Key，請在開始畫面的「AI 設定」中輸入）"); return; }
     var prompt = "你是小學數學老師的 AI 助手。請根據以下學生的答題數據，用繁體中文給一段約 150 字的個人化分析與建議：\n\n";
     prompt += "班級："+G.cls+"\n座號："+G.seat+"\n總題數："+G.total+"\n正確："+G.matched+"\n錯誤："+G.wrong+"\n";
     prompt += "用時："+fmt(G.elapsed)+"\n起始難度：L"+$("start-diff").value+"\n最終難度：L"+G.diffLv+"\n\n";
@@ -467,7 +468,6 @@
       .catch(function(e){ cb("AI 分析失敗："+e.message); });
   }
 
-  /* ====== End ====== */
   function finish() {
     stopTimer(); show(endScreen);
     $("end-class").textContent = G.cls;
@@ -482,11 +482,9 @@
     saveBtn.disabled = false; saveBtn.textContent = "儲存成績 + AI 分析";
     G.saved = false;
 
-    // suggest
     var suggest = DIFF[G.diffLv-1].name + " — 下次建議從 L"+G.diffLv+" 開始";
     diffSuggest.innerHTML = '<span class="diff-result l'+G.diffLv+'">'+suggest+'</span>';
 
-    // AI
     aiBox.textContent = "AI 分析中，請稍候...";
     aiBox.className = "ai-box loading";
     askAI(function(txt){ aiBox.textContent = txt; aiBox.className = "ai-box"; });
@@ -519,7 +517,6 @@
     });
   }
 
-  /* ====== Start ====== */
   function startGame(e) {
     e.preventDefault();
     G.cls = $("class-input").value.trim();
@@ -538,7 +535,6 @@
     show(gameScreen); renderBoard(); startTimer();
   }
 
-  /* ====== Groq key management ====== */
   function loadGroqKey() {
     var k = localStorage.getItem("groq_key") || "";
     GROQ_KEY = k; groqOk = !!k;

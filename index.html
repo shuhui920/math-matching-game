@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>數學配對 v2 — 適應性難度 + AI 分析</title>
+  <title>數學配對 v2.2 — 適應性難度 + AI 分析</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     body{
@@ -152,8 +152,8 @@
 
 <section id="start-screen" class="screen active">
   <div class="start-card">
-    <h1>數學配對 v2</h1>
-    <p class="subtitle">適應性難度 + AI 智慧分析</p>
+    <h1>數學配對 v2.2</h1>
+    <p class="subtitle">適應性難度 + AI 智慧分析 <span style="font-size:11px;color:#999;margin-left:8px">v2.2</span></p>
     <form id="start-form">
       <div style="display:flex;gap:12px">
         <div class="form-group" style="flex:1">
@@ -263,12 +263,13 @@
   var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlZWJqcGd0dWphdHBlZnVjYWpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyMTk3NjgsImV4cCI6MjEwMDc5NTc2OH0.u9Q8Vv4z0XsPVN8zJVtdbo3_2Sv8lv9JD5SXbuWo5a4";
   var _gk = ["gsk_","NRUu","YI8n","ypeE","zqHG","G0Gx","WGdy","b3FY","C5Eh","tNkd","0HU5","OEGa","w0uh","hBpi"];
   var _builtKey = _gk.join("");
-  var GROQ_KEY = localStorage.getItem("groq_key");
-  if (!GROQ_KEY || GROQ_KEY.length < 10) { GROQ_KEY = _builtKey; }
-  console.log("Groq key status:", GROQ_KEY ? "SET (length "+GROQ_KEY.length+")" : "NOT SET");
+  var _storedKey = localStorage.getItem("groq_key");
+  // 只有當 localStorage 有真正的 gsk_ key 時才用，否則用內建 key
+  var GROQ_KEY = (_storedKey && _storedKey.indexOf("gsk_") === 0) ? _storedKey : _builtKey;
+  console.log("Groq key source:", (_storedKey && _storedKey.indexOf("gsk_") === 0) ? "localStorage" : "embedded", "length:", GROQ_KEY.length);
 
-  var db, groqOk = !!(GROQ_KEY && GROQ_KEY.length > 10);
-  console.log("groqOk:", groqOk);
+  var db, groqOk = !!(GROQ_KEY && GROQ_KEY.indexOf("gsk_") === 0);
+  console.log("groqOk:", groqOk, "key starts with gsk_:", GROQ_KEY.indexOf("gsk_") === 0);
   try { 
     db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); 
     console.log("Supabase client created");
@@ -465,7 +466,7 @@
   }
 
   function askAI(cb) {
-    if (!groqOk) { cb("（尚未設定 Groq API Key，請在開始畫面的「AI 設定」中輸入）"); return; }
+    if (!groqOk) { cb("（AI 分析功能載入失敗，請確認網頁版本為 v2.2，並按 Ctrl+F5 強制重新整理）"); return; }
     var prompt = "你是小學數學老師的 AI 助手。請根據以下學生的答題數據，用繁體中文給一段約 150 字的個人化分析與建議：\n\n";
     prompt += "班級："+G.cls+"\n座號："+G.seat+"\n總題數："+G.total+"\n正確："+G.matched+"\n錯誤："+G.wrong+"\n";
     prompt += "用時："+fmt(G.elapsed)+"\n起始難度：L"+$("start-diff").value+"\n最終難度：L"+G.diffLv+"\n\n";
